@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     APP组件
+    <el-button type="primary">普通按钮</el-button>
   </div>
 </template>
 

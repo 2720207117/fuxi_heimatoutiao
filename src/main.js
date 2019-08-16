@@ -4,6 +4,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import ElementUI from 'element-ui' // 导包(element-ui)
+import 'element-ui/lib/theme-chalk/index.css' // 引入样式
+Vue.use(ElementUI) // 在全局范围注册组件库
+
 Vue.config.productionTip = false
 
 new Vue({
