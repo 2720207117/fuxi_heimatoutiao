@@ -2,7 +2,7 @@
     <div id="app">
         <el-card class="card">
             <img src="../../assets/images/logo_index.png" alt="logo">
-            <el-form :model="LoginForm" :rules="LoginRules" ref="LoginForm">
+            <el-form :model="LoginForm" :rules="LoginRules" ref="LoginForm" status-icon>
                 <el-form-item prop="mobile">
                     <el-input class="nmb1" v-model="LoginForm.mobile" placeholder="请输入手机号码"></el-input>
                 </el-form-item>
@@ -27,6 +27,13 @@
 <script>
 export default {
   data () {
+    const checkmobile = (rule, value, callback) => {
+      if (/^1[3-9]\d{9}/.test(value)) {
+        callback()
+      } else {
+        callback(new Error('手机号码格式不正确！'))
+      }
+    }
     return {
       checked: true,
       LoginForm: {
@@ -37,11 +44,11 @@ export default {
       LoginRules: {
         mobile: [
           { required: true, message: '请输入手机号！', trigger: 'blur' },
-          { min: 11, max: 11, message: '手机号必须为11位数字！', trigger: 'blur' }
+          { validator: checkmobile, trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输入验证码！', trigger: 'blur' },
-          { min: 6, max: 6, message: '验证码必须为6位数字！', trigger: 'blur' }
+          { len: 6, message: '验证码必须为6位！', trigger: 'blur' }
         ]
       }
     }
