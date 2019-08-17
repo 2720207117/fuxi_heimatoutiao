@@ -2,7 +2,7 @@
     <div id="app">
         <el-card class="card">
             <img src="../../assets/images/logo_index.png" alt="logo">
-            <el-form :model="LoginForm" :rules="LoginRules">
+            <el-form :model="LoginForm" :rules="LoginRules" ref="LoginForm">
                 <el-form-item prop="mobile">
                     <el-input class="nmb1" v-model="LoginForm.mobile" placeholder="请输入手机号码"></el-input>
                 </el-form-item>
@@ -17,7 +17,7 @@
                     <el-link type="primary">隐私条款</el-link>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" style="width: 100%">登录</el-button>
+                    <el-button @click="login()" type="primary" style="width: 100%">登录</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -40,9 +40,22 @@ export default {
           { min: 11, max: 11, message: '手机号必须为11位数字！', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入验证码！', trigger: 'blur' }
+          { required: true, message: '请输入验证码！', trigger: 'blur' },
+          { min: 6, max: 6, message: '验证码必须为6位数字！', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    login () {
+      this.$refs.LoginForm.validate((valid) => {
+        if (valid) {
+          // 校验成功，进行登录
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
