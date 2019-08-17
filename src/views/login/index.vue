@@ -58,6 +58,19 @@ export default {
       this.$refs.LoginForm.validate((valid) => {
         if (valid) {
           // 校验成功，进行登录
+          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.LoginForm).then(res => {
+            // res是响应对象，包含相应数据
+            console.log(res)
+            const UserData = res.data
+            console.log(UserData)
+            // 登录成功后做什么事情？
+            // 1. 跳转到首页
+            // 2. 保持登录状态
+            this.$router.push('/') // 跳转到首页
+          }).catch(error => {
+            this.$message.error('手机号或验证码输入错误！')
+            console.log(error)
+          })
         } else {
           console.log('error submit!!')
           return false
