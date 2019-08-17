@@ -2,12 +2,12 @@
     <div id="app">
         <el-card class="card">
             <img src="../../assets/images/logo_index.png" alt="logo">
-            <el-form>
-                <el-form-item>
-                    <el-input class="nmb1" placeholder="请输入手机号码"></el-input>
+            <el-form :model="LoginForm" :rules="LoginRules">
+                <el-form-item prop="mobile">
+                    <el-input class="nmb1" v-model="LoginForm.mobile" placeholder="请输入手机号码"></el-input>
                 </el-form-item>
-                <el-form-item class="item2">
-                    <el-input class="nmb2" placeholder="请输入验证码"></el-input>
+                <el-form-item class="item2" prop="code">
+                    <el-input class="nmb2" v-model="LoginForm.code" placeholder="请输入验证码"></el-input>
                     <el-button class="btn1">发送验证码</el-button>
                 </el-form-item>
                 <el-form-item>
@@ -28,7 +28,21 @@
 export default {
   data () {
     return {
-      checked: true
+      checked: true,
+      LoginForm: {
+        mobile: '13439211668',
+        code: '246810'
+      },
+      // 表单的校验规则对象
+      LoginRules: {
+        mobile: [
+          { required: true, message: '请输入手机号！', trigger: 'blur' },
+          { min: 11, max: 11, message: '手机号必须为11位数字！', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码！', trigger: 'blur' }
+        ]
+      }
     }
   }
 }

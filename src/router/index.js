@@ -9,7 +9,7 @@ Vue.use(VueRouter) // 在全局使用
 
 const router = new VueRouter({
   routes: [
-    { name: 'login', path: '/login', component: Login }
+    { required: true, name: 'login', path: '/login', component: Login }
   ]
 })
 export default router
