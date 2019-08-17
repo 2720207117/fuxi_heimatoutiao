@@ -5,11 +5,14 @@ import Vue from 'vue'
 
 import Login from '@/views/login' // 导入login组件
 
+import Home from '@/views/home'
+
 Vue.use(VueRouter) // 在全局使用
 
 const router = new VueRouter({
   routes: [
-    { required: true, name: 'login', path: '/login', component: Login }
+    { name: 'login', path: '/login', component: Login },
+    { name: 'home', path: '/', component: Home }
   ]
 })
 export default router

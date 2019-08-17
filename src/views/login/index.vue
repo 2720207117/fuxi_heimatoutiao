@@ -68,7 +68,7 @@ export default {
             // 2. 保持登录状态
             this.$router.push('/') // 跳转到首页
           }).catch(error => {
-            this.$message.error('手机号或验证码输入错误！')
+            this.$message.error('手机号或验证码输入错误')
             console.log(error)
           })
         } else {
