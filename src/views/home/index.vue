@@ -1,14 +1,17 @@
 <template>
     <div id="app">
-        Home组件
         <el-container class="home-container">
-            <el-aside width="200px">
-                <div class="logo"></div>
+            <!-- :width="isCollapse?'60px' : '200px'"   此处运用三元表达式 当isCollapse为true时值为60px, 为false时值为200px -->
+            <el-aside :width="isCollapse?'60px' : '200px'">
+                <!-- :class="{想要显示的类名:data中的布尔值}"   可以和写死的class同时使用 -->
+                <div class="logo" :class="{close:isCollapse}"></div>
                 <el-menu
                     default-active="1"
                     background-color="#002233"
                     text-color="#fff"
                     active-text-color="#ffd04b"
+                    :collapse="isCollapse"
+                    :collapse-transition="false"
                 >
                     <el-menu-item index="1">
                         <i class="el-icon-s-home"></i>
@@ -42,7 +45,7 @@
             </el-aside>
             <el-container>
                 <el-header class="header">
-                    <span class="el-icon-s-fold"></span>
+                    <span class="el-icon-s-fold" @click="Switchmenu"></span>
                     <span class="text">江苏传智播客教育科技有限公司</span>
                     <span class="user">
                         <img src="../../assets/images/avatar.jpg" alt="头像">
@@ -65,6 +68,16 @@
 
 <script>
 export default {
+  data () {
+    return {
+      isCollapse: false
+    }
+  },
+  methods: {
+    Switchmenu () {
+      this.isCollapse = !this.isCollapse
+    }
+  }
 
 }
 </script>
@@ -83,6 +96,10 @@ export default {
             text-align: center;
             height: 60px;
             background: url('../../assets/images/logo_admin.png') no-repeat center / 140px auto;
+        }
+        .close {
+            background: url('../../assets/images/logo_admin_01.png') no-repeat center;
+            background-size: 36px;
         }
         .el-menu {
             border-right: none;
