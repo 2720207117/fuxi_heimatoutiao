@@ -7,7 +7,9 @@ import Login from '@/views/login' // 导入login 登录页 组件
 
 import Home from '@/views/home' // 导入home 首页 组件
 
-import Welcome from '@/views/welcome' // 导入welcome 欢迎页插件
+import Welcome from '@/views/welcome' // 导入welcome 欢迎页组件
+
+import Publish from '@/views/publish' // 导入publish 发布文章组件
 
 Vue.use(VueRouter) // 在全局使用
 
@@ -21,6 +23,11 @@ const router = new VueRouter({
           name: 'welcome',
           path: '/',
           component: Welcome
+        },
+        {
+          name: 'publish',
+          path: '/publish',
+          component: Publish
         }
       ]
     }
