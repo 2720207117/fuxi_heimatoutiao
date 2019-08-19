@@ -65,8 +65,13 @@ export default {
             console.log(UserData)
             // 登录成功后做什么事情？
             // 1. 跳转到首页
-            // 2. 保持登录状态
-            this.$router.push('/') // 跳转到首页
+            // 2. 保存登录状态
+            // 2.1  保存登录状态后返回的用户信息 包含 token
+            // 2.2  使用 sessionStorage 来存储 token  (关闭浏览器会话失效)
+
+            sessionStorage.setItem('token', JSON.stringify(res.data.data)) // 参数均为字符串
+
+            this.$router.push('/') // 登录成功 跳转到首页
           }).catch(error => {
             this.$message.error('手机号或验证码输入错误')
             console.log(error)
