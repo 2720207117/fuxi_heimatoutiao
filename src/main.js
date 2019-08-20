@@ -12,6 +12,16 @@ import 'element-ui/lib/theme-chalk/index.css' // 引入样式
 import router from '@/router'
 
 import axios from 'axios'
+
+// 修改axios的默认选项
+// 基准路径
+axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+// 请求头
+axios.defaults.headers = {
+  // token认证需要的字段  值：注意需要加上前缀 'Bearer '
+  Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')).token
+}
+
 Vue.prototype.$http = axios // 将axios挂载到vue原型上，以便于在全局使用
 
 Vue.use(ElementUI) // 在全局范围注册组件库
