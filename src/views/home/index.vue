@@ -6,7 +6,7 @@
                 <!-- :class="{想要显示的类名:data中的布尔值}"   可以和写死的class同时使用 -->
                 <div class="logo" :class="{close:isCollapse}"></div>
                 <el-menu
-                    default-active="/"
+                    :default-active="$route.path"
                     background-color="#002233"
                     text-color="#fff"
                     active-text-color="#ffd04b"

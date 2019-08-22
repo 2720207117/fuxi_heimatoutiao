@@ -11,6 +11,8 @@ import Welcome from '@/views/welcome' // 导入welcome 欢迎页组件
 
 import Publish from '@/views/publish' // 导入publish 发布文章组件
 
+import Article from '@/views/article' // 导入article 内容管理组件
+
 import NotFound from '@/views/404' // 导入404 404页面组件
 
 Vue.use(VueRouter) // 在全局使用
@@ -30,9 +32,11 @@ const router = new VueRouter({
           name: 'publish',
           path: '/publish',
           component: Publish
-        }
+        },
+        { name: 'article', path: '/article', component: Article }
       ]
     },
+
     // 路径走到这个位置，证明没有任何程序去处理这个路径
     { name: 'notfound', path: '*', component: NotFound }
   ]
