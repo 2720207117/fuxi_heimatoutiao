@@ -13,6 +13,10 @@ import router from '@/router'
 
 import axios from '@/api/axios.js'
 
+import components from '@/components' // 导入插件
+
+Vue.use(components) // 全局使用插件
+
 // // 修改axios的默认选项
 // // 基准路径
 // axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'

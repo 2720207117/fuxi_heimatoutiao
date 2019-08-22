@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import MyBread from '@/components/my-bread.vue' // 导入面包屑组件
+// import MyBread from '@/components/my-bread.vue' // 导入面包屑组件    注册了插件不需导入
 export default {
-  components: {
-    MyBread // 注册面包屑组件
-  },
+//   components: {  // 注册了插件不需注册组件
+//     MyBread // 注册面包屑组件
+//   },
   data () {
     return {
       // 提交给后台的筛选条件 传参
