@@ -2,10 +2,7 @@
     <div id="app">
         <el-card>
             <div slot="header">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-                </el-breadcrumb>
+                <my-bread>内容管理</my-bread>
             </div>
                 <el-form :model="reqParams" size="small" label-width="80px">
                     <el-form-item label="状态：">
@@ -48,7 +45,11 @@
 </template>
 
 <script>
+import MyBread from '@/components/my-bread.vue' // 导入面包屑组件
 export default {
+  components: {
+    MyBread // 注册面包屑组件
+  },
   data () {
     return {
       // 提交给后台的筛选条件 传参
