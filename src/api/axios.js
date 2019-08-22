@@ -12,6 +12,7 @@ instance.interceptors.request.use(config => {
   // config 请求配置对象
   // 修改config
   const user = window.sessionStorage.getItem('fuxi_hmtt')
+  console.log(user)
   if (user) { // 如果获取到了token信息 就配置到请求头  (如果token信息失效或没有时，直接获取会报错 导致页面加载不出)
     config.headers = {
       Authorization: 'Bearer ' + JSON.parse(user).token

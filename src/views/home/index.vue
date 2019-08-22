@@ -49,14 +49,14 @@
                     <span class="el-icon-s-fold" @click="Switchmenu"></span>
                     <span class="text">江苏传智播客教育科技有限公司</span>
                     <span class="user">
-                        <img src="../../assets/images/avatar.jpg" alt="头像">
+                        <img :src="img_url" alt="头像">{{name}}
                         <el-dropdown trigger="click">
                             <span class="el-dropdown-link">
-                                下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                                <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-lock">退出登录</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-setting" @click.native="setting()">个人设置</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-lock" @click.native="logout()">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </span>
@@ -73,13 +73,33 @@
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      img_url: '',
+      name: ''
     }
   },
   methods: {
     Switchmenu () {
       this.isCollapse = !this.isCollapse
+    },
+
+    // el-dropdown-item 不是原生dom,不一定支持原生的绑定事件
+    // 如果想给组件(非原生)绑定事件，需要使用一个事件修饰符 native
+    // @click.native    触发原生dom事件
+    setting () { // 跳转到个人设置
+      this.$router.push('/setting')
+    },
+    logout () {
+      window.sessionStorage.removeItem('fuxi_hmtt') // 清除token信息
+      //   window.location.reload() // 清除token信息后 刷新页面
+      this.$router.push('/login')
     }
+  },
+  created () { // 组件出事化成功的时候 (获取用于信息)
+    const res = JSON.parse(window.sessionStorage.getItem('fuxi_hmtt'))
+    console.log(res)
+    this.name = res.name
+    this.img_url = res.photo
   }
 
 }
