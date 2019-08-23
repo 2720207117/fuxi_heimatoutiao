@@ -26,6 +26,8 @@
                     </el-form-item>
                     <el-form-item label="时间：">
                         <el-date-picker
+                            value-format="yyyy-MM-dd"
+                            @change="changeDate"
                             v-model="dateValues"
                             type="daterange"
                             range-separator="至"
@@ -34,7 +36,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">筛选</el-button>
+                        <el-button type="primary" @click="search()">筛选</el-button>
                     </el-form-item>
                 </el-form>
         </el-card>
@@ -70,6 +72,7 @@
                     <el-button class="el-icon-delete" plain circle type="danger"></el-button>
                 </el-table-column>
             </el-table>
+            <!-- 分页器 -->
             <el-pagination
                 background
                 layout="prev, pager, next"
@@ -123,6 +126,19 @@ export default {
       //   console.log(data)
       this.total_count = data.total_count
       this.tableData = data.results
+    },
+
+    // 用户确认选定时间后触发该函数
+    changeDate (values) { // 默认传入values数据 与 dateValues保持一致
+    // 给begin，end赋值即可
+      this.reqParams.begin_pubdate = values[0]
+      this.reqParams.end_pubdate = values[1]
+    },
+
+    // 点击搜索按钮触发改事件 搜索
+    search () {
+      // 重新获取数据即可
+      this.gettableData()
     }
   }
 }
