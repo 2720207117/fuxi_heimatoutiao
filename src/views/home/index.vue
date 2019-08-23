@@ -97,7 +97,7 @@ export default {
   },
   created () { // 组件出事化成功的时候 (获取用于信息)
     const res = JSON.parse(window.sessionStorage.getItem('fuxi_hmtt'))
-    console.log(res)
+    // console.log(res)
     this.name = res.name
     this.img_url = res.photo
   }

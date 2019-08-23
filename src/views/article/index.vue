@@ -60,8 +60,18 @@ export default {
         begin_pubdate: null,
         end_pubdate: null
       },
-      channelOptions: [{ name: 'JAVA', id: 1 }],
+      channelOptions: [],
       dateValues: []
+    }
+  },
+  created () {
+    // 获取频道数据
+    this.getChannelOptions()
+  },
+  methods: {
+    async getChannelOptions () {
+      const { data: { data } } = await this.$http.get('channels')
+      this.channelOptions = data.channels
     }
   }
 }

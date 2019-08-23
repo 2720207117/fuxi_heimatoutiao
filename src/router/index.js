@@ -48,7 +48,6 @@ router.beforeEach((to, from, next) => {
   // 判断登录状态
 
   const user = window.sessionStorage.getItem('fuxi_hmtt') // 首先获取token信息
-  console.log(user)
   // 判断 (如果不是去登录页并且没有token就跳转到登录页)
   if (to.path !== '/login' && !user) {
     next('/login')
