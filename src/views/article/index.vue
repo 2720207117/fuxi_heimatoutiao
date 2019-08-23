@@ -73,10 +73,15 @@
                 </el-table-column>
             </el-table>
             <!-- 分页器 -->
+            <!-- :@current-change 页码切换时触发的事件；:current-page 当前页；
+                 :page-size 一页显示多少条数据；:total 数据总条数 -->
             <el-pagination
                 background
                 layout="prev, pager, next"
-                :total="1000">
+                :total="this.total_count"
+                :page-size="reqParams.per_page"
+                :current-page="reqParams.page"
+                @current-change="changePager">
             </el-pagination>
         </el-card>
     </div>
@@ -93,6 +98,8 @@ export default {
       // 提交给后台的筛选条件 传参
       // 数据为null 将不会发送该字段
       reqParams: {
+        page: '1', // 当前页
+        per_page: '20', // 每页显示数据条数
         status: null,
         channel_id: null,
         begin_pubdate: null,
@@ -101,7 +108,7 @@ export default {
       channelOptions: [],
       dateValues: [],
       tableData: [],
-      total_count: ''
+      total_count: '' // 定义数据总条数
     }
   },
   created () {
@@ -124,8 +131,9 @@ export default {
       // get传参    axios.get('url', {params: {参数对象}})
       const { data: { data } } = await this.$http.get('articles', { params: this.reqParams })
       //   console.log(data)
-      this.total_count = data.total_count
-      this.tableData = data.results
+      this.total_count = data.total_count // 获取数据总条数
+      this.tableData = data.results // 获取文章列表
+      this.per_page = data.per_page // 获取每页数据条数
     },
 
     // 用户确认选定时间后触发该函数
@@ -135,10 +143,19 @@ export default {
       this.reqParams.end_pubdate = values[1]
     },
 
-    // 点击搜索按钮触发改事件 搜索
+    // 点击搜索按钮触发改函数 搜索
     search () {
       // 重新获取数据即可
+      this.reqParams.page = 1 // 获取数据时，当前页为第一页
       this.gettableData()
+    },
+
+    // 页码切换时触发该函数
+    changePager (value) { // value 接收当前点击的页码
+      this.reqParams.page = value // 更新提交给后台的参数
+      this.gettableData() // 重新获取数据
+
+      // --> 去修改筛选功能 筛选时，数据及页码再返回到第一页
     }
   }
 }
