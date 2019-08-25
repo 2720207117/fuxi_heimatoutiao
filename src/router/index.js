@@ -13,6 +13,8 @@ import Publish from '@/views/publish' // 导入publish 发布文章组件
 
 import Article from '@/views/article' // 导入article 内容管理组件
 
+import Image from '@/views/image' // 导入image 素材管理组件
+
 import NotFound from '@/views/404' // 导入404 404页面组件
 
 Vue.use(VueRouter) // 在全局使用
@@ -33,7 +35,8 @@ const router = new VueRouter({
           path: '/publish',
           component: Publish
         },
-        { name: 'article', path: '/article', component: Article }
+        { name: 'article', path: '/article', component: Article },
+        { name: 'image', path: '/image', component: Image }
       ]
     },
 
