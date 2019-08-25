@@ -72,7 +72,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="120px">
                     <template slot-scope="scope">
-                      <el-button class="el-icon-edit" plain circle type="primary"></el-button>
+                      <el-button @click="editValues(scope.row.id)" class="el-icon-edit" plain circle type="primary"></el-button>
                     <el-button @click="deleteValues(scope.row.id)" class="el-icon-delete" plain circle type="danger"></el-button>
                     </template>
                 </el-table-column>
@@ -185,6 +185,12 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+
+    // 点击修改时，触发该函数
+    editValues (id) {
+      // this.$router.push('publish?id=' + id) 或者下面方式
+      this.$router.push({ path: 'publish', query: { id } })
     }
   }
 }
