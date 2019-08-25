@@ -55,6 +55,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="标题" prop="title">
+                    <!-- <template slot-scope="scope">
+                        {{scope.row.id}}  此处目的：显示文章id 被转换的是否准确，以便用于删除文章数据
+                    </template> -->
                 </el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope">
@@ -68,8 +71,10 @@
                 <el-table-column label="发布时间" prop="pubdate">
                 </el-table-column>
                 <el-table-column label="操作" width="120px">
-                    <el-button class="el-icon-edit" plain circle type="primary"></el-button>
-                    <el-button class="el-icon-delete" plain circle type="danger"></el-button>
+                    <template slot-scope="scope">
+                      <el-button class="el-icon-edit" plain circle type="primary"></el-button>
+                    <el-button @click="deleteValues(scope.row.id)" class="el-icon-delete" plain circle type="danger"></el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <!-- 分页器 -->
@@ -98,8 +103,8 @@ export default {
       // 提交给后台的筛选条件 传参
       // 数据为null 将不会发送该字段
       reqParams: {
-        page: '1', // 当前页
-        per_page: '20', // 每页显示数据条数
+        page: 1, // 当前页
+        per_page: 20, // 每页显示数据条数
         status: null,
         channel_id: null,
         begin_pubdate: null,
@@ -108,7 +113,7 @@ export default {
       channelOptions: [],
       dateValues: [],
       tableData: [],
-      total_count: '' // 定义数据总条数
+      total_count: 0 // 定义数据总条数
     }
   },
   created () {
@@ -130,7 +135,7 @@ export default {
       // post传参   axios.post('url', {参数对象})
       // get传参    axios.get('url', {params: {参数对象}})
       const { data: { data } } = await this.$http.get('articles', { params: this.reqParams })
-      //   console.log(data)
+      console.log(data)
       this.total_count = data.total_count // 获取数据总条数
       this.tableData = data.results // 获取文章列表
       this.per_page = data.per_page // 获取每页数据条数
@@ -156,10 +161,35 @@ export default {
       this.gettableData() // 重新获取数据
 
       // --> 去修改筛选功能 筛选时，数据及页码再返回到第一页
+    },
+
+    // 点击删除时，触发该函数
+    deleteValues (id) {
+      // 发送删除数据请求
+      this.$confirm('此操作将永久删除该文章, 是否继续?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        // 点击确认 (发送删除文章数据请求)
+        await this.$http.delete(`articles/${id}`)
+        this.gettableData()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        // 点击取消
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
 </script>
+
 <style lang="less" scoped>
     .el-card {
         margin-bottom: 20px;
