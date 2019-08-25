@@ -28,7 +28,6 @@ export default {
     async getChannelOptions () {
       const { data: { data } } = await this.$http.get('channels')
       this.channelOptions = data.channels
-      this.$emit('input', data.channels.id)
     },
     fn (value) { // 下拉菜单 change事件中 默认会有一个参数：被选中的值
       this.$emit('input', value)
