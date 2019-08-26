@@ -18,7 +18,14 @@
                     </div>
                 </li>
             </ul>
-            <el-pagination background layout="prev, pager, next" :total="1000">
+            <el-pagination
+              v-if="total > reqParams.per_page"
+              background
+              layout="prev, pager, next"
+              :page-size="reqParams.per_page"
+              :current-page="reqParams.page"
+              @current-change="pager"
+              :total="total">
             </el-pagination>
         </el-card>
     </div>
@@ -35,7 +42,10 @@ export default {
       },
 
       // 素材列表数据
-      images: []
+      images: [],
+
+      // 数据总条数
+      total: 0
 
     }
   },
@@ -50,6 +60,7 @@ export default {
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       console.log(data)
       this.images = data.results
+      this.total = data.total_count
     },
 
     search () {
@@ -58,6 +69,12 @@ export default {
 
       // 重新获取数据 (此时collect值为true)
       this.getImages()
+    },
+
+    // 当点击分页时触发该函数
+    pager (newPage) { // 默认传入参数 当前页
+      this.reqParams.page = newPage // 获取当前页
+      this.getImages() // 重新获取数据
     }
   }
 }
