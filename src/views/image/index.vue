@@ -4,16 +4,16 @@
             <div slot="header">
                 <my-bread>素材管理</my-bread>
             </div>
-            <el-radio-group v-model="radio" size="small">
-                <el-radio-button type="primary" label="全部" ></el-radio-button>
-                <el-radio-button label="收藏"></el-radio-button>
+            <el-radio-group v-model="reqParams.collect" @change="search()" size="small">
+                <el-radio-button type="primary" :label="false" >全部</el-radio-button>
+                <el-radio-button :label="true">收藏</el-radio-button>
             </el-radio-group>
             <el-button type="success" size="small">添加素材</el-button>
             <ul>
-                <li v-for="item in 10" :key="item">
-                    <img src="../../assets/images/avatar.jpg" alt="">
-                    <div class="foot">
-                        <span class="el-icon-star-off" :class="{red: item%2}"></span>
+                <li v-for="item in images" :key="item.id">
+                    <img :src="item.url" alt="">
+                    <div class="foot" v-if="reqParams.collect===false">
+                        <span class="el-icon-star-off" :class="{red: item.is_collected}"></span>
                         <span class="el-icon-delete"></span>
                     </div>
                 </li>
@@ -28,7 +28,36 @@
 export default {
   data () {
     return {
-      radio: '全部'
+      reqParams: {
+        collect: false,
+        page: 1,
+        per_page: 10
+      },
+
+      // 素材列表数据
+      images: []
+
+    }
+  },
+
+  created () {
+    // 获取素材列表数据
+    this.getImages()
+  },
+
+  methods: {
+    async getImages () {
+      const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
+      console.log(data)
+      this.images = data.results
+    },
+
+    search () {
+      // 重新获取的数据显示第一页
+      this.reqParams.page = 1
+
+      // 重新获取数据 (此时collect值为true)
+      this.getImages()
     }
   }
 }
@@ -59,7 +88,8 @@ export default {
                 width: 100%;
                 height: 30px;
                 line-height: 30px;
-                background: rgba(197, 242, 246, 0.5);
+                color: #fff;
+                background: rgba(0, 0, 0, 0.5);
                 text-align: center;
                 border-top: 1px solid #ccc;
                 position: absolute;
