@@ -8,7 +8,29 @@
                 <el-radio-button type="primary" :label="false" >全部</el-radio-button>
                 <el-radio-button :label="true">收藏</el-radio-button>
             </el-radio-group>
-            <el-button type="success" size="small">添加素材</el-button>
+            <el-button class="add" type="success" size="small" @click="dialogVisible = true">添加素材</el-button>
+
+            <!-- 弹框 -->
+            <el-dialog
+                title="添加素材"
+                :visible.sync="dialogVisible"
+                width="300px">
+                <el-upload
+                    class="avatar-uploader"
+                    action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+                    :show-file-list="false"
+                    :headers="headers"
+                    name="image"
+                    :on-success="handleSuccess"
+                >
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                </span>
+            </el-dialog>
+
             <ul>
                 <li v-for="item in images" :key="item.id">
                     <img :src="item.url" alt="">
@@ -36,9 +58,20 @@ export default {
   data () {
     return {
       reqParams: {
-        collect: false,
-        page: 1,
-        per_page: 10
+        collect: false, // 是否是收藏的图片 (false: 不是    true: 是)
+        page: 1, // 当前页
+        per_page: 10 // 一页显示多少条数据
+      },
+
+      // 控制弹框的显示与隐藏 默认隐藏
+      dialogVisible: false,
+
+      // 预览图片的地址
+      imageUrl: null,
+
+      // 上传的请求头
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')).token
       },
 
       // 素材列表数据
@@ -56,6 +89,7 @@ export default {
   },
 
   methods: {
+    // 项目初始化完成时，触发此函数 目的：获取图片素材数据
     async getImages () {
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       console.log(data)
@@ -63,6 +97,7 @@ export default {
       this.total = data.total_count
     },
 
+    // 当单选按钮被切换时，触发此函数
     search () {
       // 重新获取的数据显示第一页
       this.reqParams.page = 1
@@ -75,12 +110,26 @@ export default {
     pager (newPage) { // 默认传入参数 当前页
       this.reqParams.page = newPage // 获取当前页
       this.getImages() // 重新获取数据
+    },
+
+    // 上传素材图片成功后，触发的函数 (文件上传成功时的钩子函数)
+    handleSuccess (res) { // 内有三个参数 第一个 response(响应数据)
+      // 1. 预览图片
+      this.imageUrl = res.data.url
+
+      // 2. 关闭对话框 更新列表数据 (定时器：1.5秒后关闭弹框，更新数据，关闭弹框清除预览图片)
+      window.setTimeout(() => {
+        this.dialogVisible = false
+        this.getImages()
+        this.imageUrl = null
+        this.$message.success('上传成功')
+      }, 1500)
     }
   }
 }
 </script>
 <style lang="less" scoped>
-    .el-button {
+    .add {
         float: right;
     }
     ul {

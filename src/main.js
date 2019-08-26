@@ -15,6 +15,9 @@ import axios from '@/api/axios.js'
 
 import components from '@/components' // 导入插件
 
+// 引入全局样式
+import '@/styles/index.less' // 导入全局样式
+
 Vue.use(components) // 全局使用插件
 
 // // 修改axios的默认选项
