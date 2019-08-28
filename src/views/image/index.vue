@@ -36,7 +36,7 @@
                     <img :src="item.url" alt="">
                     <div class="foot" v-if="reqParams.collect===false">
                         <span @click="collect(item)" class="el-icon-star-off" :class="{red: item.is_collected}"></span>
-                        <span class="el-icon-delete"></span>
+                        <span @click="delImage(item)" class="el-icon-delete"></span>
                     </div>
                 </li>
             </ul>
@@ -96,7 +96,7 @@ export default {
     async getImages () {
       this.loading = true
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
-      console.log(data)
+      // console.log(data)
       this.images = data.results
       this.total = data.total_count
       this.loading = false
@@ -141,6 +141,24 @@ export default {
       // value.is_collected = !value.is_collected
       value.is_collected = data.collect
       this.$message.success('收藏成功')
+    },
+
+    // 点击删除按钮，触发该函数
+    delImage (value) {
+      this.$confirm('此操作将永久删除该素材图片, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete('user/images/' + value.id)
+        this.$message.success('素材删除成功!')
+        this.getImages()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
