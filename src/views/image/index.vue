@@ -1,5 +1,5 @@
 <template>
-    <div id="image_content">
+    <div id="image_content" v-loading="loading">
         <el-card>
             <div slot="header">
                 <my-bread>素材管理</my-bread>
@@ -74,6 +74,9 @@ export default {
         Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')).token
       },
 
+      // 数据加载特效
+      loading: false,
+
       // 素材列表数据
       images: [],
 
@@ -91,10 +94,12 @@ export default {
   methods: {
     // 项目初始化完成时，触发此函数 目的：获取图片素材数据
     async getImages () {
+      this.loading = true
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       console.log(data)
       this.images = data.results
       this.total = data.total_count
+      this.loading = false
     },
 
     // 当单选按钮被切换时，触发此函数
@@ -122,7 +127,7 @@ export default {
         this.dialogVisible = false
         this.getImages()
         this.imageUrl = null
-        this.$message.success('上传成功')
+        this.$message.success('素材上传成功')
       }, 1500)
     }
   }
