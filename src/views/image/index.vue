@@ -35,7 +35,7 @@
                 <li v-for="item in images" :key="item.id">
                     <img :src="item.url" alt="">
                     <div class="foot" v-if="reqParams.collect===false">
-                        <span class="el-icon-star-off" :class="{red: item.is_collected}"></span>
+                        <span @click="collect(item)" class="el-icon-star-off" :class="{red: item.is_collected}"></span>
                         <span class="el-icon-delete"></span>
                     </div>
                 </li>
@@ -129,6 +129,18 @@ export default {
         this.imageUrl = null
         this.$message.success('素材上传成功')
       }, 1500)
+    },
+
+    // 点击收藏按钮，触发该函数
+    async collect (value) {
+      // 五角星变为红色
+      // 发送请求
+      const { data: { data } } = await this.$http.put('user/images/' + value.id, { collect: !value.is_collected })
+      console.log(data)
+      // 更改收藏图标的颜色 一：将collect值取反 或 二：更该为返回数据中的collect值
+      // value.is_collected = !value.is_collected
+      value.is_collected = data.collect
+      this.$message.success('收藏成功')
     }
   }
 }
