@@ -9,7 +9,7 @@
                     <el-input style="width: 400px" v-model="articleForm.title"></el-input>
                 </el-form-item>
                 <el-form-item label="内容">
-                    富文本
+                    <quill-editor v-model="articleForm.content" :options="editorOption"></quill-editor>
                 </el-form-item>
                 <el-form-item label="封面">
                     <el-radio-group v-model="articleForm.cover.type">
@@ -35,16 +35,36 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
+  components: { quillEditor },
   data () {
     return {
+      // 请求体数据
       articleForm: {
         title: '',
+        content: '',
         cover: {
           type: 1,
           images: []
         },
         channel_id: ''
+      },
+      // 富文本编辑器配置对象
+      editorOption: {
+        placeholder: '', // 清空默认占位符
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }]
+          ]
+        }
       }
     }
   }
