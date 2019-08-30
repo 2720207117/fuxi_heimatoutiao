@@ -18,9 +18,7 @@
                         <el-radio :label="0">无图</el-radio>
                         <el-radio :label="-1">自动</el-radio>
                     </el-radio-group>
-                    <div class="upImg">
-                        <img src="../../assets/images/default.png" alt="">
-                    </div>
+                    <my-image></my-image>
                 </el-form-item>
                 <el-form-item label="频道">
                     <my-channel v-model="articleForm.channel_id"></my-channel>
@@ -71,15 +69,5 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-    .upImg {
-        width: 150px;
-        height: 150px;
-        border: 1px dashed #ccc;
-        margin-top: 10px;
-        img {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-    }
+
 </style>
