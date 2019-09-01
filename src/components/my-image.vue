@@ -1,11 +1,12 @@
 <template>
     <div id="app">
         <div class="upImg" @click="openDialog">
-            <img src="../assets/images/default.png" alt="">
+            <img :src="value" alt="">
         </div>
         <!-- 对话框 -->
         <el-dialog :visible.sync="dialogVisible" width="700px" height="500px" center>
             <!-- 内容 -->
+            <!-- v-model="activeName" 是选中了tab选项卡 name属性的值 -->
             <el-tabs v-model="activeName" type="card" v-loading="loading">
                 <el-tab-pane label="素材库" name="images">
                     <!-- 单选按钮 -->
@@ -16,7 +17,7 @@
                         </el-radio-group>
                     </div>
                     <!-- 素材列表 -->
-                    <div class="imgBox" :class="{selected:imageId === item.id}" @click="selected(item.id)" v-for="item in images" :key="item.id">
+                    <div class="imgBox" :class="{selected:url === item.url}" @click="selected(item.url)" v-for="item in images" :key="item.id">
                         <img :src="item.url" alt="">
                     </div>
                     <!-- 分页器 -->
@@ -34,8 +35,11 @@
                 <el-tab-pane label="上传图片" name="upimgs">
                     <el-upload
                         class="avatar-uploader"
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
                         :show-file-list="false"
+                        :headers="headers"
+                        name="image"
+                        :on-success="handleSuccess"
                     >
                         <img v-if="imageUrl" :src="imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -45,7 +49,7 @@
             <!-- 按钮 -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="confirmImage">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -53,10 +57,16 @@
 </template>
 
 <script>
+import defaultImage from '../assets/images/default.png' // 导入本地图片资源地址
 export default {
   name: 'my-image',
   data () {
     return {
+      // 设置默认图片
+      // 项目是webpack打包，如果本地的资源地址，存储在数据中，是不会打包到项目中。
+      // 主动导入图片资源，此时图片就是一项数据 (base64的数据：字符串数据格式)
+      value: defaultImage,
+
       // 加载中
       loading: false,
 
@@ -79,7 +89,12 @@ export default {
 
       images: [], // 图片素材数据
 
-      imageId: null // 选中的图片id
+      url: null, // 选中的图片url (url也具有为一性)
+
+      // 上传图片的请求头
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')).token
+      }
     }
   },
   methods: {
@@ -116,10 +131,31 @@ export default {
     },
 
     // 选中当前点击的图片
-    selected (id) {
+    selected (url) {
       // 给当前点击的图片，加上一个类 selected
       // :class="{ selected: 条件}"
-      this.imageId = id
+      // 条件：根据当前图片的url 去匹配遍历时的url 一致添加 不一致不添加
+      this.url = url
+    },
+
+    // 上传素材图片成功后，触发的函数 (文件上传成功时的钩子函数)
+    handleSuccess (res) { // 内有三个参数 第一个 response(响应数据)
+      // 预览图片
+      this.imageUrl = res.data.url
+    },
+
+    // 确认图片 (对话框内，点击确按钮时，会触发此函数)
+    confirmImage () {
+      if (this.activeName === 'images') { // 如果选项卡选中的是素材库
+        // 使用 url
+        if (!this.url) return this.$message.info('请选中封面图')// 严谨判断 当没有数据时 直接return
+        this.value = this.url
+      } else {
+        // 使用imageUrl
+        if (!this.imageUrl) return this.$message.info('请上传封面图') // 严谨判断 当没有获取到imageUrl时，直接return
+        this.value = this.imageUrl
+      }
+      this.dialogVisible = false
     }
   }
 }
