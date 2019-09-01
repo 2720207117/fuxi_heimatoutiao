@@ -18,7 +18,7 @@
                         <el-radio :label="0">无图</el-radio>
                         <el-radio :label="-1">自动</el-radio>
                     </el-radio-group>
-                    <my-image></my-image>
+                    <my-image v-model="articleForm.cover.images[0]"></my-image>
                 </el-form-item>
                 <el-form-item label="频道">
                     <my-channel v-model="articleForm.channel_id"></my-channel>
@@ -47,6 +47,8 @@ export default {
         content: '',
         cover: {
           type: 1,
+
+          // 单张图 三张图
           images: []
         },
         channel_id: ''

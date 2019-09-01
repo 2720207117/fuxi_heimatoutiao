@@ -1,7 +1,8 @@
 <template>
     <div id="app">
         <div class="upImg" @click="openDialog">
-            <img :src="value" alt="">
+            <!-- 父组件有数据  没有数据使用默认图片 -->
+            <img :src="value || defaultImage" alt="">
         </div>
         <!-- 对话框 -->
         <el-dialog :visible.sync="dialogVisible" width="700px" height="500px" center>
@@ -60,12 +61,15 @@
 import defaultImage from '../assets/images/default.png' // 导入本地图片资源地址
 export default {
   name: 'my-image',
+  props: ['value'],
   data () {
     return {
       // 设置默认图片
       // 项目是webpack打包，如果本地的资源地址，存储在数据中，是不会打包到项目中。
       // 主动导入图片资源，此时图片就是一项数据 (base64的数据：字符串数据格式)
-      value: defaultImage,
+      // value: defaultImage,
+
+      defaultImage,
 
       // 加载中
       loading: false,
@@ -102,6 +106,10 @@ export default {
     openDialog () {
       // 打开对话框
       this.dialogVisible = true
+
+      // 把上一次数据清空
+      this.imageUrl = null
+      this.url = null
 
       // 获取图片素材数据
       this.getImages()
@@ -149,14 +157,21 @@ export default {
       if (this.activeName === 'images') { // 如果选项卡选中的是素材库
         // 使用 url
         if (!this.url) return this.$message.info('请选中封面图')// 严谨判断 当没有数据时 直接return
-        this.value = this.url
+        // this.value = this.url
+        // 通知父组件，数据要发生改变 (传数据给父组件)
+        this.$emit('input', this.url)
       } else {
         // 使用imageUrl
         if (!this.imageUrl) return this.$message.info('请上传封面图') // 严谨判断 当没有获取到imageUrl时，直接return
-        this.value = this.imageUrl
+        // this.value = this.imageUrl
+        // 通知父组件数据要发生改变
+        this.$emit('input', this.imageUrl)
       }
       this.dialogVisible = false
     }
+  },
+  created () {
+    console.log(this.props)
   }
 }
 </script>
