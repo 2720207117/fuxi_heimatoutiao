@@ -16,7 +16,7 @@
                         </el-radio-group>
                     </div>
                     <!-- 素材列表 -->
-                    <div class="imgBox" v-for="item in images" :key="item.id">
+                    <div class="imgBox" :class="{selected:imageId === item.id}" @click="selected(item.id)" v-for="item in images" :key="item.id">
                         <img :src="item.url" alt="">
                     </div>
                     <!-- 分页器 -->
@@ -77,7 +77,9 @@ export default {
 
       imageUrl: null, // 上传图片预览地址
 
-      images: [] // 图片素材数据
+      images: [], // 图片素材数据
+
+      imageId: null // 选中的图片id
     }
   },
   methods: {
@@ -111,6 +113,13 @@ export default {
       // 获取收藏的素材图片数据
       this.reqParams.page = 1 // 显示第一页的请求数据
       this.getImages()
+    },
+
+    // 选中当前点击的图片
+    selected (id) {
+      // 给当前点击的图片，加上一个类 selected
+      // :class="{ selected: 条件}"
+      this.imageId = id
     }
   }
 }
@@ -130,10 +139,22 @@ export default {
     .imgBox {
         width: 150px;
         height: 120px;
-        background: #ccc;
         margin: 10px 10px 0 0;
-        border: 1px dashed #666;
         display: inline-block;
+        position: relative;
+        // & 连接符 .imgBox.selected (使用交集选择器时，避免产生空格)
+        &.selected {
+            &::before {
+                // 一个和图片大小一样的容器 有半透明背景 打钩图标
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                background: rgba(0, 0, 0, .5) url('../assets/images/selected.png') no-repeat center / 60px 60px;
+            }
+        }
         img {
             width: 100%;
             height: 100%;
