@@ -85,11 +85,37 @@ export default {
     }
   },
   created () {
-    // 问题：修改的地址过来了 点击发布文章 组件不更新
+    // 问题：在文章编辑的时候切换到发布，组件不更新 (原因：路由没有发生改变，只是传参改变了，没有去更新组件)
+    // 出现：只在编辑文章切换到发布的时候才会出现
+    // 解决：此处参数是$route对象中的query对象中的id，使用侦听器监听$route属性变化，更新组件
     this.articleId = this.$route.query.id
 
     // 获取文章数据
-    this.getArticle(this.articleId)
+    // if (this.articleId) { // 严谨判断 当获取到了articleId(文章id)时，再获取指定文章数据
+    //   this.getArticle(this.articleId)
+    // }
+
+    // 或者
+    this.articleId && this.getArticle(this.articleId)
+  },
+  watch: {
+    $route () {
+      // 1. 把编辑状态改成发布状态(表单内容重置，把ID重置)
+      this.articleId = null
+
+      // 不能重置为null或{} 因为null.title会报错  {}.type报错
+      this.articleForm = {
+        title: '',
+        content: '',
+        cover: {
+          type: 1,
+
+          // 单张图 三张图
+          images: []
+        },
+        channel_id: ''
+      }
+    }
   },
   methods: {
     changeType () {
