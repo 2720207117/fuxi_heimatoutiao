@@ -169,9 +169,6 @@ export default {
       }
       this.dialogVisible = false
     }
-  },
-  created () {
-    console.log(this.props)
   }
 }
 </script>
@@ -181,6 +178,8 @@ export default {
         height: 150px;
         border: 1px dashed #ccc;
         margin-top: 10px;
+        float: left;
+        margin-right: 10px;
         img {
             width: 100%;
             height: 100%;
