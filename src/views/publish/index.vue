@@ -2,7 +2,7 @@
     <div id="app">
         <el-card>
             <div slot="header">
-                <my-bread>发布文章</my-bread>
+                <my-bread>{{articleId ? '修改文章' : '发布文章'}}</my-bread>
             </div>
             <el-form :model="articleForm" label-width="100px">
                 <el-form-item label="标题">
@@ -30,9 +30,15 @@
                 <el-form-item label="频道">
                     <my-channel v-model="articleForm.channel_id"></my-channel>
                 </el-form-item>
-                <el-form-item>
+                <!-- 如果没有获取到文章id 说明是发表文章 -->
+                <el-form-item v-if="!articleId">
                     <el-button type="primary" @click="publish(false)">发表</el-button>
                     <el-button @click="publish(true)">草稿</el-button>
+                </el-form-item>
+                <!-- 反之 获取到文章id 则为修改文章 -->
+                <el-form-item v-else>
+                    <el-button type="success" @click="edit(false)">修改</el-button>
+                    <el-button @click="edit(true)">草稿</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -48,6 +54,9 @@ export default {
   components: { quillEditor },
   data () {
     return {
+      // 文章Id
+      articleId: null,
+
       // 请求体数据
       articleForm: {
         title: '',
@@ -75,6 +84,13 @@ export default {
       }
     }
   },
+  created () {
+    // 问题：修改的地址过来了 点击发布文章 组件不更新
+    this.articleId = this.$route.query.id
+
+    // 获取文章数据
+    this.getArticle(this.articleId)
+  },
   methods: {
     changeType () {
       // 重置图片数组
@@ -88,8 +104,20 @@ export default {
       await this.$http.post('articles?draft=' + draft, this.articleForm)
       this.$message.success(draft ? '存入草稿成功' : '文章发表成功')
       this.$router.push('/article')
+    },
+
+    async edit (draft) {
+      await this.$http.put(`articles/${this.articleId}?draft=${draft}`, this.articleForm)
+      this.$message.success(draft ? '修改存入草稿成功' : '修改文章成功')
+      this.$router.push('/article')
+    },
+
+    async getArticle (id) {
+      const { data: { data } } = await this.$http.get('/articles/' + id)
+      this.articleForm = data
     }
   }
+
 }
 </script>
 <style lang="less" scoped>
