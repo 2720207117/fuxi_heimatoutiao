@@ -147,5 +147,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+  // 在组件暴露的标签，会加上一个属于当前组件的唯一标签 data-v-xxx
+  // 而没在组件暴露的标签(其他组件的标签)，没有加上唯一标识
+  // style: scoped 意思：样式在当前组件下生效
+  // .el-card 解析后为： .el-card[data-v-xxx] 这是生成后的选择器 此标签暴露在当组件 生效
+  // .el-card__header 解析后为： .el-card__header[data-v-xxx] 这是生成后的选择器 此标签在el-card组件内部 没有暴露在el-card组件内 不生效
+  // 解决：在全局定义样式
 </style>
