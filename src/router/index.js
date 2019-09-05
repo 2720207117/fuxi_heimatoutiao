@@ -17,6 +17,8 @@ import Image from '@/views/image' // 导入image 素材管理组件
 
 import Comment from '@/views/comment' // 导入 comment 评论管理组件
 
+import Setting from '@/views/setting' // 导入 setting 个人设置组件
+
 import NotFound from '@/views/404' // 导入404 404页面组件
 
 Vue.use(VueRouter) // 在全局使用
@@ -31,7 +33,8 @@ const router = new VueRouter({
         { name: 'publish', path: '/publish', component: Publish },
         { name: 'article', path: '/article', component: Article },
         { name: 'image', path: '/image', component: Image },
-        { name: 'comment', path: '/comment', component: Comment }
+        { name: 'comment', path: '/comment', component: Comment },
+        { name: 'setting', path: '/setting', component: Setting }
       ]
     },
 
