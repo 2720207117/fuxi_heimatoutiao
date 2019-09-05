@@ -20,8 +20,8 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button v-if="!scope.row.comment_status" round size="mini" type="success" class="el-icon-edit">打开评论</el-button>
-                        <el-button v-else round size="mini" type="danger" class="el-icon-edit">关闭评论</el-button>
+                        <el-button @click="toggleStatus(scope.row)" v-if="!scope.row.comment_status" round size="mini" type="success" class="el-icon-edit">打开评论</el-button>
+                        <el-button @click="toggleStatus(scope.row)" v-else round size="mini" type="danger" class="el-icon-edit">关闭评论</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -73,6 +73,26 @@ export default {
     peger (newPage) { // newPager 为当前页
       this.reqParams.page = newPage
       this.getComments()
+    },
+
+    // 切换评论状态
+    async toggleStatus (row) {
+      const text1 = '您确认要打开评论吗？'
+      const text2 = '您确认要关闭评论吗？'
+      this.$confirm(row.comment_status ? text2 : text1, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { data: { data } } = await this.$http.put('comments/status?article_id=' + row.id, { allow_comment: !row.comment_status })
+        // console.log(data)
+        this.$message.success('修改状态成功')
+        // 更新视图
+        row.comment_status = data.allow_comment
+      }).catch(() => {
+
+      })
+      // const data = await this.$http.put('comments/status?article_id=xxx')
     }
   }
 }
