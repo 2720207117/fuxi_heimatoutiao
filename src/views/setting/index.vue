@@ -1,6 +1,13 @@
 <template>
     <div id="app">
-        <h1>个人设置页面</h1>
+        <el-card>
+            <div slot="header">
+                <my-bread>个人设置</my-bread>
+            </div>
+            <my-a></my-a>
+            <hr>
+            <my-b></my-b>
+        </el-card>
     </div>
 </template>
 
