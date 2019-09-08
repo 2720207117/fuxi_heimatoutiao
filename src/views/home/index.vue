@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
@@ -100,6 +101,11 @@ export default {
     // console.log(res)
     this.name = res.name
     this.img_url = res.photo
+
+    // 使用eventBus绑定事件 接受setting组件传给的name数据 (setting组件修改用户名称时，会返回新的用户名称信息，需传递给home组件)
+    eventBus.$on('updateUserName', (name) => {
+      this.name = name
+    })
   }
 
 }

@@ -7,7 +7,7 @@
             <el-row>
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
-                        <el-form :model="userForm">
+                        <el-form :model="userForm" label-width="120px">
                             <el-form-item label="编号：">{{userForm.id}}</el-form-item>
                             <el-form-item label="手机：">{{userForm.mobile}}</el-form-item>
                             <el-form-item label="媒体名称：">
@@ -20,7 +20,7 @@
                                 <el-input v-model="userForm.email"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="success">保存信息</el-button>
+                                <el-button @click="updateUser" type="success">保存信息</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
@@ -61,13 +62,36 @@ export default {
     }
   },
   created () {
-    this.getuserData()
+    this.getuserData() // 获取用户资料
   },
   methods: {
+    // 初始化个人设置页面时，触发此函数
     async getuserData () {
       const { data: { data } } = await this.$http.get('user/profile')
-      console.log(data)
+      //   console.log(data)
       this.userForm = data
+    },
+
+    // 当点击保存信息按钮时，触发此函数
+    async updateUser () {
+      const { data: { data } } = await this.$http.patch('user/profile', {
+        name: this.userForm.name,
+        intro: this.userForm.intro,
+        email: this.userForm.email
+      })
+      this.$message.success('修改用户信息成功')
+
+      // 让头部的用户名称和返回的用户名称同步
+      // 让setting组件的数据 传递给home组件 (eventBus)
+      eventBus.$emit('updateUserName', data.name)
+
+      // 问题：保存用户信息成功后 刷新页面 头部的用户名又改回去了
+      // 原因：用户信息保存在了sessionStorage 里 没有更新sessionStorage
+      // 解决：需要把sessionStorage里的用户信息全部取出 再修改其中的name信息(不能直接修改，需要保存住token信息，否则页面会退出登录)
+      const userData = JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')) // 获取sessionStorage里的用户信息
+      //   console.log(userData)
+      userData.name = data.name // 修改用户用户信息里的用户名称
+      window.sessionStorage.setItem('fuxi_hmtt', JSON.stringify(userData)) // 更新sessionStorage
     }
   }
 }
