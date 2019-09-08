@@ -30,10 +30,9 @@
                         <p style="text-align: center;">媒体头像</p>
                         <el-upload
                             class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
+                            action="http://ttapi.research.itcast.cn/mp/v1_0/user/photo"
                             :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload"
+                            :http-request="Upreq"
                         >
                             <img v-if="userForm.photo" :src="userForm.photo" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -57,8 +56,10 @@ export default {
         intro: null,
         email: null,
         photo: null
+      },
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')).token
       }
-
     }
   },
   created () {
@@ -85,13 +86,33 @@ export default {
       // 让setting组件的数据 传递给home组件 (eventBus)
       eventBus.$emit('updateUserName', data.name)
 
-      // 问题：保存用户信息成功后 刷新页面 头部的用户名又改回去了
+      // 问题：保存用户信息成功后 刷新页面 头部的用户信息又改回去了
       // 原因：用户信息保存在了sessionStorage 里 没有更新sessionStorage
       // 解决：需要把sessionStorage里的用户信息全部取出 再修改其中的name信息(不能直接修改，需要保存住token信息，否则页面会退出登录)
       const userData = JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')) // 获取sessionStorage里的用户信息
       //   console.log(userData)
       userData.name = data.name // 修改用户用户信息里的用户名称
+
       window.sessionStorage.setItem('fuxi_hmtt', JSON.stringify(userData)) // 更新sessionStorage
+    },
+
+    Upreq (data) {
+      // 把文件数据放在FormData中
+      const formData = new FormData()
+      formData.append('photo', data.file)
+      this.$http.patch('user/photo', formData).then(res => {
+        // console.log(res)
+        this.userForm.photo = res.data.data.photo // 显示要更新的头像
+
+        // 更新头部头像
+        eventBus.$emit('updatePhoto', res.data.data.photo)
+
+        // 更新sessionStorarge
+        const userData = JSON.parse(window.sessionStorage.getItem('fuxi_hmtt')) // 获取sessionStorage里的用户信息
+        // console.log(userData)
+        userData.photo = this.userForm.photo // 修改用户用户信息里的头像地址
+        window.sessionStorage.setItem('fuxi_hmtt', JSON.stringify(userData))
+      })
     }
   }
 }

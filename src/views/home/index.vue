@@ -106,6 +106,10 @@ export default {
     eventBus.$on('updateUserName', (name) => {
       this.name = name
     })
+
+    eventBus.$on('updatePhoto', (photo) => {
+      this.img_url = photo
+    })
   }
 
 }
