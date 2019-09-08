@@ -1,5 +1,6 @@
 <template>
-    <div id="app">----- B ----- {{data}}</div>
+  <!-- 此组件测试兄弟组件传值测试用 可删除 -->
+  <div id="app">----- B ----- {{data}}</div>
 </template>
 
 <script>

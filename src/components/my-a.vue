@@ -1,5 +1,6 @@
 <template>
-    <div id="app">----- A ----- <button @click="fn">传数据给B</button></div>
+  <!-- 此组件测试兄弟组件传值测试用 可删除 -->
+  <div id="app">----- A ----- <button @click="fn">传数据给B</button></div>
 </template>
 
 <script>
