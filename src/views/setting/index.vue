@@ -8,16 +8,16 @@
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
                         <el-form :model="userForm">
-                            <el-form-item label="编号：">{{id}}</el-form-item>
-                            <el-form-item label="手机：">{{mobile}}</el-form-item>
+                            <el-form-item label="编号：">{{userForm.id}}</el-form-item>
+                            <el-form-item label="手机：">{{userForm.mobile}}</el-form-item>
                             <el-form-item label="媒体名称：">
-                                <el-input></el-input>
+                                <el-input v-model="userForm.name"></el-input>
                             </el-form-item>
                             <el-form-item label="媒体介绍：">
-                                <el-input type="textarea" :rows="3"></el-input>
+                                <el-input v-model="userForm.intro" type="textarea" :rows="3"></el-input>
                             </el-form-item>
                             <el-form-item label="邮箱：">
-                                <el-input></el-input>
+                                <el-input v-model="userForm.email"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="success">保存信息</el-button>
@@ -35,7 +35,7 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload"
                         >
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <img v-if="userForm.photo" :src="userForm.photo" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </div>
@@ -49,10 +49,25 @@
 export default {
   data () {
     return {
-      userForm: {},
-      id: 1,
-      mobile: '13439211668',
-      imageUrl: null
+      userForm: {
+        name: null,
+        id: null,
+        mobile: null,
+        intro: null,
+        email: null,
+        photo: null
+      }
+
+    }
+  },
+  created () {
+    this.getuserData()
+  },
+  methods: {
+    async getuserData () {
+      const { data: { data } } = await this.$http.get('user/profile')
+      console.log(data)
+      this.userForm = data
     }
   }
 }
