@@ -19,6 +19,8 @@ import Comment from '@/views/comment' // 导入 comment 评论管理组件
 
 import Setting from '@/views/setting' // 导入 setting 个人设置组件
 
+import Fans from '@/views/fans' // 导入 fans 粉丝管理组件
+
 import NotFound from '@/views/404' // 导入404 404页面组件
 
 Vue.use(VueRouter) // 在全局使用
@@ -34,7 +36,8 @@ const router = new VueRouter({
         { name: 'article', path: '/article', component: Article },
         { name: 'image', path: '/image', component: Image },
         { name: 'comment', path: '/comment', component: Comment },
-        { name: 'setting', path: '/setting', component: Setting }
+        { name: 'setting', path: '/setting', component: Setting },
+        { name: 'fans', path: '/fans', component: Fans }
       ]
     },
 
